@@ -1,7 +1,9 @@
+import NewsFeed from "@/components/home/NewsFeed";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">ET AI Experience 🚀</h1>
+    <main>
+      <NewsFeed />
     </main>
   );
 }
