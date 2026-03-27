@@ -15,7 +15,7 @@ export default function Navbar() {
             </a>
           </li>
           <li>
-            <a href="/newsroom" className="hover:text-gray-900 transition-colors">
+            <a href="/my-et" className="hover:text-gray-900 transition-colors">
               Your Newsroom
             </a>
           </li>
