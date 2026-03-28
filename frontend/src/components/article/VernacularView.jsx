@@ -40,7 +40,7 @@ export default function VernacularView({ article }) {
             <button
               key={id}
               onClick={() => handleModeChange(id)}
-              className={`px-3 py-1.5 transition-colors ${
+              className={`px-3 py-1.5 transition-all duration-200 active:scale-95 ${
                 mode === id
                   ? "bg-gray-900 text-white"
                   : "bg-white text-gray-600 hover:bg-gray-50"

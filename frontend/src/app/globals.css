@@ -1,1 +1,86 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #020617;
+    --primary: #991b1b;
+    --navy-deep: #020617;
+    --navy-muted: #1e293b;
+    --accent: #facc15;
+    --off-white: #f8fafc;
+  }
+
+  body {
+    @apply bg-white text-slate-950 antialiased selection:bg-red-100 selection:text-red-900;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif tracking-tight text-balance;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+
+  .glass-dark {
+    @apply bg-slate-950/80 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .bg-navy-deep { background-color: var(--navy-deep); }
+  .bg-off-white { background-color: var(--off-white); }
+
+  /* Financial Grid Background */
+  .bg-grid-finance {
+    background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .shadow-layered {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 
+                0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  }
+
+  /* Status Glows */
+  .glow-green {
+    box-shadow: 0 0 20px 2px rgba(34, 197, 94, 0.15);
+  }
+  .glow-red {
+    box-shadow: 0 0 25px 5px rgba(153, 27, 27, 0.1);
+  }
+
+  /* Animated Underline */
+  .underline-animate {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:h-1 after:w-0 after:bg-red-900 after:transition-all after:duration-500 hover:after:w-full;
+  }
+
+  .step-enter { animation: fadeIn 0.5s ease-out; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-soft-pulse { animation: soft-pulse 2s infinite ease-in-out; }
+.animate-marquee { animation: marquee 30s linear infinite; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
