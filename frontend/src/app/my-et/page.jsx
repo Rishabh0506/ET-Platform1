@@ -1,5 +1,5 @@
 import DailyBrief from "@/components/my-et/DailyBrief";
-import PersonaFeed from "@/components/my-et/PersonaFeed";
+import VernacularFeed from "@/components/my-et/VernacularFeed";
 
 export const metadata = {
   title: "Your Newsroom | ET AI",
@@ -24,8 +24,8 @@ export default function MyET() {
         <DailyBrief />
       </div>
 
-      {/* Personalized Feed */}
-      <PersonaFeed />
+      {/* Personalized Feed with Vernacular Toggle */}
+      <VernacularFeed />
     </main>
   );
 }
