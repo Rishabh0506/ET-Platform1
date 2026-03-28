@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import articles, personalization
+from app.routes import articles, personalization, vernacular
 
 app = FastAPI(title="ET AI Backend")
 
@@ -14,6 +14,7 @@ app.add_middleware(
 
 app.include_router(articles.router)
 app.include_router(personalization.router)
+app.include_router(vernacular.router)
 
 
 @app.get("/")
