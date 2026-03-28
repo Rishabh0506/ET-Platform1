@@ -10,6 +10,7 @@ export default async function NewsFeed() {
         {articles.map((article) => (
           <NewsCard
             key={article.id}
+            id={article.id}
             headline={article.headline}
             summary={article.summary}
           />
