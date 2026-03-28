@@ -1,14 +1,13 @@
-import { articles } from "./articles";
+const BACKEND_URL = "http://127.0.0.1:8000";
 
 /**
- * Fetch all articles.
- * Currently returns mock data.
- * To switch to an API, replace the implementation here — callers stay unchanged.
+ * Fetch all articles from the backend API.
  *
  * @returns {Promise<Array>} List of articles
  */
 export async function getArticles() {
-  return articles;
+  const res = await fetch(`${BACKEND_URL}/articles`, { cache: "no-store" });
+  return res.json();
 }
 
 /**
@@ -18,5 +17,6 @@ export async function getArticles() {
  * @returns {Promise<Object|null>}
  */
 export async function getArticleById(id) {
+  const articles = await getArticles();
   return articles.find((article) => article.id === id) ?? null;
 }
