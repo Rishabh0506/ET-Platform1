@@ -1,6 +1,6 @@
 import { getArticleById } from "@/data/dataService";
 import ArticleHeader from "./ArticleHeader";
-import ArticleContent from "./ArticleContent";
+import VernacularView from "./VernacularView";
 import Link from "next/link";
 
 export default async function ArticleContainer({ id }) {
@@ -32,7 +32,7 @@ export default async function ArticleContainer({ id }) {
         timestamp={article.timestamp}
       />
 
-      <ArticleContent summary={article.summary} body={article.body} />
+      <VernacularView article={article} />
     </article>
   );
 }
