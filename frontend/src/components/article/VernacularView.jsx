@@ -3,54 +3,56 @@
 import { useState } from "react";
 import { useVernacular } from "@/hooks/useVernacular";
 import ArticleContent from "./ArticleContent";
+import SideBySide from "./SideBySide";
 
 const LANGUAGES = ["Hindi", "Tamil", "Telugu", "Bengali"];
 
 export default function VernacularView({ article }) {
-  const [vernacularOn, setVernacularOn] = useState(false);
+  const [mode, setMode] = useState("english"); // "english" | "vernacular" | "compare"
   const [language, setLanguage] = useState("Hindi");
   const { content, loading, fetchVernacular } = useVernacular(article);
 
-  function handleToggle(mode) {
-    const turning_on = mode === "vernacular";
-    setVernacularOn(turning_on);
-    if (turning_on) fetchVernacular(language);
+  function handleModeChange(newMode) {
+    setMode(newMode);
+    if (newMode === "vernacular") fetchVernacular(language);
+    // SideBySide fetches internally on mount
   }
 
   function handleLanguageChange(e) {
     const lang = e.target.value;
     setLanguage(lang);
-    if (vernacularOn) fetchVernacular(lang);
+    if (mode === "vernacular") fetchVernacular(lang);
   }
+
+  const showLanguagePicker = mode === "vernacular" || mode === "compare";
 
   return (
     <div>
-      {/* Toggle bar */}
+      {/* Controls bar */}
       <div className="mb-6 flex flex-wrap items-center gap-3 border-b border-gray-100 pb-4">
+        {/* View mode toggle */}
         <div className="flex rounded border border-gray-200 overflow-hidden text-xs font-medium">
-          <button
-            onClick={() => handleToggle("english")}
-            className={`px-3 py-1.5 transition-colors ${
-              !vernacularOn
-                ? "bg-gray-900 text-white"
-                : "bg-white text-gray-600 hover:bg-gray-50"
-            }`}
-          >
-            English
-          </button>
-          <button
-            onClick={() => handleToggle("vernacular")}
-            className={`px-3 py-1.5 transition-colors ${
-              vernacularOn
-                ? "bg-gray-900 text-white"
-                : "bg-white text-gray-600 hover:bg-gray-50"
-            }`}
-          >
-            Your Language
-          </button>
+          {[
+            { id: "english", label: "English" },
+            { id: "vernacular", label: "Your Language" },
+            { id: "compare", label: "Compare View" },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => handleModeChange(id)}
+              className={`px-3 py-1.5 transition-colors ${
+                mode === id
+                  ? "bg-gray-900 text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
-        {vernacularOn && (
+        {/* Language picker */}
+        {showLanguagePicker && (
           <select
             value={language}
             onChange={handleLanguageChange}
@@ -64,20 +66,26 @@ export default function VernacularView({ article }) {
           </select>
         )}
 
-        {vernacularOn && (
+        {mode !== "english" && (
           <span className="text-xs text-gray-400">✨ Culturally Adapted</span>
         )}
       </div>
 
       {/* Content */}
-      {vernacularOn ? (
+      {mode === "english" && (
+        <ArticleContent summary={article.summary} body={article.body} />
+      )}
+
+      {mode === "vernacular" && (
         loading ? (
           <p className="text-sm text-gray-400 italic">Translating…</p>
         ) : (
           <p className="text-base text-gray-700 leading-loose">{content}</p>
         )
-      ) : (
-        <ArticleContent summary={article.summary} body={article.body} />
+      )}
+
+      {mode === "compare" && (
+        <SideBySide article={article} language={language} />
       )}
     </div>
   );
