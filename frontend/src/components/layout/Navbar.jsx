@@ -1,7 +1,34 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 
 export default function Navbar() {
   const trendingTopics = ["Live", "Budget 2026", "AI Policy", "Crypto Hub", "Tech War", "IPO Monitor"];
+  const pathname = usePathname();
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activeLang, setActiveLang] = useState("English");
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLangChange = (mode) => {
+    setActiveLang(mode);
+    setDropdownOpen(false);
+    if (typeof document !== "undefined") {
+      document.dispatchEvent(new CustomEvent("vernacularMode", { detail: mode }));
+    }
+  };
 
   return (
     <nav className="w-full bg-white font-sans flex flex-col border-b border-[#E0E0E0]">
@@ -30,7 +57,30 @@ export default function Navbar() {
           </div>
         </Link>
         <div className="text-[12px] text-[#666666] flex flex-wrap items-center justify-center gap-2">
-          <span>English Edition</span>
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={() => setDropdownOpen(!dropdownOpen)} 
+              className="flex items-center gap-1 cursor-pointer"
+            >
+              English Edition <span className="text-[10px] pt-[1px]">▾</span>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 bg-white border border-[#E0E0E0] shadow-[0_2px_8px_rgba(0,0,0,0.1)] py-1.5 z-50 min-w-[140px] rounded-[3px] flex flex-col items-start w-[140px] overflow-hidden">
+                <button 
+                  onClick={() => handleLangChange("English")}
+                  className={`w-full text-left px-4 py-2 text-[13px] font-sans flex items-center justify-between transition-colors ${activeLang === "English" ? "font-bold text-[#C0001D]" : "text-[#666666] hover:bg-gray-50"}`}
+                >
+                  English {activeLang === "English" && <span>✓</span>}
+                </button>
+                <button 
+                  onClick={() => handleLangChange("Vernacular")}
+                  className={`w-full text-left px-4 py-2 text-[13px] font-sans flex items-center justify-between transition-colors ${activeLang === "Vernacular" ? "font-bold text-[#C0001D]" : "text-[#666666] hover:bg-gray-50"}`}
+                >
+                  Vernacular {activeLang === "Vernacular" && <span>✓</span>}
+                </button>
+              </div>
+            )}
+          </div>
           <span className="text-[#E0E0E0]">|</span>
           <span>29 March, 2026</span>
           <span className="text-[#E0E0E0]">|</span>
@@ -47,12 +97,13 @@ export default function Navbar() {
       {/* ROW 3: MAIN NAV BAR */}
       <div className="w-full bg-white border-b border-[#E0E0E0] px-6 py-0 flex justify-center">
         <ul className="flex items-center flex-wrap justify-center gap-6 md:gap-8 text-[12px] font-bold text-[#1A1A1A] uppercase tracking-[0.5px]">
-          <li><Link href="/" className="text-[#C0001D] border-b-[3px] border-[#C0001D] pt-3 pb-2.5 inline-block">Home</Link></li>
+          <li><Link href="/" className={`${pathname === '/' ? 'text-[#C0001D] border-b-[3px] border-[#C0001D]' : 'hover:text-[#C0001D] transition-all'} pt-3 pb-2.5 inline-block`}>Home</Link></li>
           <li><a href="#" className="hover:text-[#C0001D] transition-all pt-3 pb-2.5 inline-block">Intelligence</a></li>
           <li><a href="#" className="hover:text-[#C0001D] transition-all pt-3 pb-2.5 inline-block">Markets</a></li>
           <li><a href="#" className="hover:text-[#C0001D] transition-all pt-3 pb-2.5 inline-block">Tech</a></li>
           <li><a href="#" className="hover:text-[#C0001D] transition-all pt-3 pb-2.5 inline-block">Policy</a></li>
           <li><a href="#" className="hover:text-[#C0001D] transition-all pt-3 pb-2.5 inline-block">Alpha</a></li>
+          <li><Link href="/my-et" className={`${pathname === '/my-et' ? 'text-[#C0001D] border-b-[3px] border-[#C0001D]' : 'hover:text-[#C0001D] transition-all'} pt-3 pb-2.5 inline-block`}>Newsroom</Link></li>
         </ul>
       </div>
 

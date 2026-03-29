@@ -1,10 +1,27 @@
-export default function DashboardSidebar() {
-  const insights = [
-    { id: "01", title: "Portfolio Exposure Detected", body: "Your small-cap tech allocation is hitting risk thresholds. Policy shift expected Tues.", type: "alert" },
-    { id: "02", title: "Dividend Alert: HUL", body: "Record date approaching. Expected yield: 2.1%. Action recommended.", type: "info" },
-    { id: "03", title: "Sector Rotation Signal", body: "Liquidity Moving from Banking to Energy. Hedge utilities now.", type: "system" }
-  ];
+import { getArticles } from "@/lib/api/articles";
+import Link from "next/link";
 
+function formatTimelineDate(dateStr) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "";
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const month = months[d.getMonth()];
+    const day = d.getDate();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    return `${month} ${day}  ${hours}:${minutes} ${ampm}`;
+  } catch (e) {
+    return "";
+  }
+}
+
+export default async function DashboardSidebar() {
   const watchlist = [
     { name: "RELIANCE", val: "2,984.00", chg: "+1.2%", up: true },
     { name: "BAJAJFIN", val: "6,412.00", chg: "-2.1%", up: false },
@@ -12,58 +29,72 @@ export default function DashboardSidebar() {
     { name: "TCS", val: "3,812.50", chg: "-0.4%", up: false },
   ];
 
+  let timelineArticles = [];
+  let error = false;
+  try {
+    const res = await getArticles();
+    if (res && Array.isArray(res)) {
+      timelineArticles = res;
+    } else {
+      error = true;
+    }
+  } catch (err) {
+    error = true;
+  }
+
   return (
     <div className="flex flex-col gap-12 sticky top-12">
-      
-      {/* 1. AI Intelligence Command Center (Supreme Gradient & Glow) */}
-      <section className="bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white p-12 rounded-sm border-t-[6px] border-red-800 shadow-3xl shadow-slate-950/60 relative overflow-hidden group">
-        {/* Vertical Pulse Accent Line */}
-        <div className="absolute left-0 top-0 bottom-0 w-px bg-red-900/30">
-           <div className="w-full h-32 bg-red-500 animate-[pulse_4s_infinite] shadow-[0_0_15px_rgba(239,68,68,0.5)]"></div>
-        </div>
-        
-        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-15 transition-all duration-1000 rotate-12 group-hover:rotate-0">
-           <svg className="w-32 h-32 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #F0F0F0;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #C0001D;
+          border-radius: 2px;
+        }
+      `}</style>
+
+      {/* 1. Latest News Timeline (Gizmodo / Verge Style) */}
+      <section className="bg-[#FAFAFA] border border-[#E0E0E0] rounded-[4px] h-[600px] overflow-y-auto w-full custom-scrollbar relative flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b-2 border-[#E0E0E0] sticky top-0 bg-[#FAFAFA] z-10 flex-shrink-0">
+          <h2 className="text-[28px] md:text-[32px] font-serif font-bold text-[#1A1A1A] leading-none tracking-tight">
+            • Latest
+          </h2>
         </div>
 
-        <div className="flex items-center justify-between mb-16 relative z-10">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-red-500 flex items-center gap-4">
-              <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse glow-red"></span>
-              AI Command Module
-            </h2>
-            <div className="px-3 py-1 bg-red-900/30 border border-red-800/50 text-[8px] font-black text-red-500 rounded-sm uppercase tracking-[0.2em] shadow-lg">SYSTEM ACTIVE</div>
-        </div>
-
-        <div className="space-y-12 mb-16 relative z-10">
-          {insights.map((ins) => (
-            <div key={ins.id} className="group/item cursor-pointer transform hover:translate-x-2 transition-transform duration-500">
-              <div className="flex gap-6">
-                <span className="text-3xl font-serif font-black text-white/5 italic group-hover/item:text-red-900/40 transition-colors leading-none">{ins.id}</span>
-                <div className="flex flex-col gap-3">
-                  <h3 className={`text-[11px] font-black uppercase tracking-[0.3em] transition-colors ${ins.type === 'alert' ? 'text-red-500 group-hover/item:text-red-400' : 'text-slate-400 group-hover/item:text-white'}`}>
-                    {ins.title}
+        {/* Timeline Items */}
+        <div className="flex flex-col flex-1">
+          {error ? (
+            <div className="flex items-center justify-center p-8 text-[#888888] text-sm h-full font-sans">
+               Unable to load timeline
+            </div>
+          ) : timelineArticles.length > 0 ? (
+            timelineArticles.map((article, idx) => (
+              <div key={idx} className="p-[12px_16px] border-b border-[#F0F0F0] last:border-b-0">
+                <div className="text-[11px] font-bold uppercase text-[#888888] mb-1 font-sans">
+                  {formatTimelineDate(article.timestamp)}
+                </div>
+                <Link href={`/article/${article.id}`} className="block group/link">
+                  <h3 className="font-serif font-semibold text-[14px] md:text-[15px] text-[#1A1A1A] leading-snug line-clamp-2 transition-colors relative pl-3.5 group-hover/link:text-[#C0001D]">
+                    <span className="absolute left-0 top-[2px] text-[#1A1A1A] group-hover/link:text-[#C0001D] text-[16px] leading-none">•</span>
+                    {article.headline}
                   </h3>
-                  <p className="text-base font-serif italic text-slate-500 leading-relaxed group-hover/item:text-slate-100 transition-all duration-500">
-                    "{ins.body}"
-                  </p>
+                </Link>
+                <div className="text-[11px] font-normal uppercase text-[#888888] mt-1 pl-3.5 font-sans">
+                  {article.category || "News"}
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="flex items-center justify-center p-8 text-[#888888] text-sm h-full font-sans">
+               No articles available
             </div>
-          ))}
+          )}
         </div>
-
-        {/* AI Strategic Warning Panel */}
-        <div className="bg-red-950/40 border-l-4 border-red-800 p-8 rounded-sm mb-12 shadow-2xl shadow-black relative overflow-hidden group/warning">
-           <div className="absolute inset-0 bg-red-900/5 opacity-0 group-hover/warning:opacity-100 transition-opacity"></div>
-           <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.4em] block mb-3 italic">Critical Exposure Alert</span>
-           <p className="text-sm text-red-100/80 font-medium leading-relaxed italic relative z-10">
-             Banking Sector volatility cross-referenced with your liquidity targets requires <span className="text-white font-black underline decoration-red-600 decoration-2">Immediate Hedge Execution</span>.
-           </p>
-        </div>
-
-        <button className="w-full bg-white text-slate-950 py-5 text-[10px] font-black uppercase tracking-[0.4em] hover:bg-red-800 hover:text-white transition-all shadow-3xl active:scale-95 relative z-10">
-          Execute System Intel
-        </button>
       </section>
 
       {/* 2. Live Watchlist Module (Sleek Contrast) */}
