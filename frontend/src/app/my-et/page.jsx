@@ -2,13 +2,19 @@ import DailyBrief from "@/components/my-et/DailyBrief";
 import VernacularFeed from "@/components/my-et/VernacularFeed";
 import LiveImpactStrip from "@/components/my-et/LiveImpactStrip";
 import DashboardSidebar from "@/components/my-et/DashboardSidebar";
+import { getArticles } from "@/lib/api/articles";
 
 export const metadata = {
   title: "Your Command Center | ET AI",
   description: "Elite financial intelligence dashboard adapted for you.",
 };
 
-export default function MyET() {
+export const dynamic = "force-dynamic";
+
+export default async function MyET() {
+  // Fetch live AI-expanded news
+  const activeArticles = await getArticles();
+
   return (
     <main className="min-h-screen bg-off-white pb-20 bg-grid-finance">
       {/* 1. Real-time Live Impact Strip (Global Alert) */}
@@ -109,7 +115,7 @@ export default function MyET() {
                 </div>
               </div>
 
-              <VernacularFeed />
+              <VernacularFeed articles={activeArticles} />
             </section>
           </div>
 

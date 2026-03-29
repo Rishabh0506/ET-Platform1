@@ -1,4 +1,4 @@
-import { getArticleById } from "@/data/dataService";
+import { getArticleById } from "@/lib/api/articles";
 import ArticleHeader from "./ArticleHeader";
 import VernacularView from "./VernacularView";
 import Link from "next/link";

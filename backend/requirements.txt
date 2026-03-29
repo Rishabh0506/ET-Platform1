@@ -1,2 +1,7 @@
 fastapi
 uvicorn[standard]
+feedparser
+python-dotenv
+huggingface_hub
+httpx
+google-genai

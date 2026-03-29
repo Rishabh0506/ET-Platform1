@@ -1,6 +1,7 @@
 import { useImpact } from "@/hooks/useImpact";
 import { useVernacular } from "@/hooks/useVernacular";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function ImpactCard({
   headline,
@@ -42,7 +43,9 @@ export default function ImpactCard({
              <span className="h-1 w-1 rounded-full bg-slate-300"></span>
              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Confidence: 94%</span>
           </div>
-          <h4 className="text-base font-bold text-slate-900 group-hover:text-red-900 transition-colors leading-tight tracking-tight underline-animate">{headline}</h4>
+          <Link href={`/article/${article.id}`}>
+            <h4 className="text-base font-bold text-slate-900 group-hover:text-red-900 transition-colors leading-tight tracking-tight underline-animate">{headline}</h4>
+          </Link>
         </div>
         <div className="h-10 w-10 flex items-center justify-center rounded-full border border-slate-100 group-hover:border-red-900 group-hover:bg-red-50 transition-all">
            <svg className="w-4 h-4 text-slate-300 group-hover:text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
@@ -94,9 +97,11 @@ export default function ImpactCard({
         {/* 3. Intense Narrative Layer */}
         <div className="flex-1 flex flex-col justify-between pt-2">
           <div>
-            <h3 className={`${isFeatured ? "text-4xl lg:text-7xl" : "text-3xl lg:text-4xl"} font-serif font-black text-slate-950 leading-[0.9] tracking-tighter mb-10 group-hover:text-red-900 transition-colors duration-500 underline-animate cursor-default`}>
-              {headline}
-            </h3>
+            <Link href={`/article/${article.id}`}>
+              <h3 className={`${isFeatured ? "text-4xl lg:text-7xl" : "text-3xl lg:text-4xl"} font-serif font-black text-slate-950 leading-[0.9] tracking-tighter mb-10 group-hover:text-red-900 transition-colors duration-500 underline-animate cursor-pointer`}>
+                {headline}
+              </h3>
+            </Link>
 
             {isCompareMode ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-slate-50 pt-10 mb-10">

@@ -5,49 +5,14 @@ import ImpactCard from "./ImpactCard";
 
 const LANGUAGES = ["Hindi", "Tamil", "Telugu", "Bengali"];
 
-const articles = [
-  {
-    id: "p-001",
-    headline: "Sensex Surges 800 Points as Foreign Investors Return",
-    summary:
-      "Indian equity markets posted sharp gains after FIIs turned net buyers for the third straight session.",
-    category: "Markets",
-  },
-  {
-    id: "p-002",
-    headline: "India's GDP Growth Forecast Revised to 7.2% for FY2026",
-    summary:
-      "IMF upgraded India's growth outlook citing strong domestic consumption and infrastructure investment.",
-    category: "Economy",
-  },
-  {
-    id: "p-003",
-    headline: "Startups Raise $1.2B in Q1 2026 as VC Sentiment Improves",
-    summary:
-      "Indian startups attracted over $1.2 billion in Q1, driven by fintech, climate tech, and AI sectors.",
-    category: "Startups",
-  },
-  {
-    id: "p-004",
-    headline: "New Fintech Regulations: What Every Trader Needs to Know",
-    summary: "The SEBI has introduced new rules for algorithmic trading, aiming to increase market transparency.",
-    category: "Policy",
-  },
-  {
-    id: "p-005",
-    headline: "Green Energy Bonds See Record Over-subscription",
-    summary: "Institutional investors are flocking to green energy bonds as sustainability targets become critical.",
-    category: "Markets",
-  }
-];
-
-export default function VernacularFeed() {
+export default function VernacularFeed({ articles = [] }) {
   const [vernacularOn, setVernacularOn] = useState(false);
   const [language, setLanguage] = useState("Hindi");
 
-  const featured = articles[0];
+  // Prevent error if articles empty
+  const featured = articles[0] || {};
   const primary = articles.slice(1, 3);
-  const secondary = articles.slice(3);
+  const secondary = articles.slice(3, 8);
 
   return (
     <div className="flex flex-col gap-12">

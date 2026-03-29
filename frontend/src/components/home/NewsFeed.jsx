@@ -6,7 +6,7 @@ export default async function NewsFeed() {
 
   return (
     <div className="flex flex-col gap-6">
-      {articles.slice(5).map((article) => (
+      {articles.map((article) => (
         <NewsCard
           key={article.id}
           id={article.id}

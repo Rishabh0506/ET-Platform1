@@ -4,6 +4,8 @@ import DashboardPreview from "@/components/landing/DashboardPreview";
 import NewsFeed from "@/components/home/NewsFeed";
 import { getArticles } from "@/lib/api/articles";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const articles = await getArticles();
 
